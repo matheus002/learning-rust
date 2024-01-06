@@ -17,6 +17,7 @@ fn main() {
     ***********************************************
     ***********************************************
     **************  COMMANDS  *********************
+            ENTER any number to validade your guess
             ENTER 'q' to quit the game.
             ENTER 'i' to show the instructions.
             ENTER 'a' to show the number of attemps
@@ -44,10 +45,7 @@ fn main() {
             .read_line(&mut guess)
             .expect("Failed to read line");
 
-        let lvfdvfd = String::from("q");
-        println!("{}", guess.eq(&lvfdvfd));
-
-        match guess.as_str() {
+        match guess.trim() {
             "q" => {
                 println!("You select to quit the game, bye...");
                 break;
@@ -56,28 +54,36 @@ fn main() {
                 println!("{}", instructions);
             }
             "a" => {
-                println!("This is the attemp {}", attempts_number);
+                println!(
+                    "This is the attempt: {}",
+                    attempts_number.to_string().bold()
+                );
             }
             _ => (),
         };
 
-        println!("Your guessed: {}", guess.as_str());
+        attempts_number += 1;
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
             Err(_) => {
-                println!("{}", "Invalid Input".red());
                 continue;
             }
         };
 
         match guess.cmp(&secret_number) {
-            Ordering::Less => println!("{}", "Too Small".red()),
-            Ordering::Greater => println!("{}", "Too big".red()),
+            Ordering::Less => {
+                println!("Your guessed: {} was {}", guess, "Too Small".red())
+            }
+            Ordering::Greater => println!("Your guessed: {} was {}", guess, "Too big".red()),
             Ordering::Equal => {
-                println!("{}", "Congratulations! YOU WIN!!!!".green().bold());
+                println!(
+                    "Your guessed: {} was RIGTH {} with {} attempts",
+                    guess,
+                    "Congratulations! YOU WIN".green().bold(),
+                    attempts_number.to_string().green().bold()
+                );
                 break;
             }
         }
-        attempts_number += 1;
     }
 }
